@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bansal Marketing</title>
+
+<style>
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#fff8ef;
+  color:#32150f;
+}
+
+header{
+  background:#8b1e12;
+  color:white;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.logo{
+  font-size:21px;
+  font-weight:bold;
+}
+
+header button{
+  padding:9px 12px;
+  border:0;
+  border-radius:7px;
+}
+
+.hero{
+  background:#e85d04;
+  color:white;
+  text-align:center;
+  padding:45px 15px;
+}
+
+.hero h1{
+  font-size:34px;
+}
+
+.hero button{
+  padding:12px 20px;
+  border:0;
+  border-radius:7px;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:25px 15px;
+}
+
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:20px;
+}
+
+.product{
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 2px 10px #ddd;
+}
+
+.product img{
+  width:100%;
+  height:210px;
+  object-fit:cover;
+  background:#eee;
+}
+
+.info{
+  padding:15px;
+}
+
+.price{
+  color:#8b1e12;
+  font-size:21px;
+  font-weight:bold;
+}
+
+.add{
+  width:100%;
+  padding:12px;
+  background:#8b1e12;
+  color:white;
+  border:0;
+  border-radius:7px;
+  margin-top:10px;
+}
+
+.cart-button{
+  position:fixed;
+  right:15px;
+  bottom:15px;
+  background:#e85d04;
+  color:white;
+  border:0;
+  padding:15px 20px;
+  border-radius:30px;
+  z-index:10;
+}
+
+.cart{
+  position:fixed;
+  right:-100%;
+  top:0;
+  width:100%;
+  max-width:400px;
+  height:100%;
+  background:white;
+  z-index:20;
+  box-shadow:0 0 15px #555;
+  transition:.3s;
+  padding:20px;
+  overflow:auto;
+}
+
+.cart.open{
+  right:0;
+}
+
+.close{
+  float:right;
+  font-size:25px;
+}
+
+.admin{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#f5f5f5;
+  z-index:100;
+  overflow:auto;
+}
+
+.admin.open{
+  display:block;
+}
+
+.admin-header{
+  background:#32150f;
+  color:white;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+}
+
+.admin-content{
+  max-width:800px;
+  margin:auto;
+  padding:20px;
+}
+
+.box{
+  background:white;
+  padding:20px;
+  margin-bottom:20px;
+  border-radius:10px;
+}
+
+input{
+  width:100%;
+  padding:11px;
+  margin:6px 0 12px;
+  border:1px solid #ccc;
+  border-radius:7px;
+}
+
+.save{
+  background:#8b1e12;
+  color:white;
+  border:0;
+  padding:12px 18px;
+  border-radius:7px;
+}
+
+.admin-product{
+  border:1px solid #ddd;
+  padding:12px;
+  margin-top:10px;
+  border-radius:7px;
+}
+
+.delete{
+  background:#c62828;
+  color:white;
+  border:0;
+  padding:8px;
+  border-radius:5px;
+}
+
+footer{
+  background:#32150f;
+  color:white;
+  text-align:center;
+  padding:25px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo" id="logo">
+BANSAL MARKETING
+</div>
+
+<button onclick="openAdmin()">
+⚙️ Admin
+</button>
+
+</header>
+
+
+<section class="hero">
+
+<h1 id="heroName">
+BANSAL MARKETING
+</h1>
+
+<p id="heroTagline">
+Pure Taste, Every Day.
+</p>
+
+</section>
+
+
+<div class="container">
+
+<h2>
+Our Products
+</h2>
+
+<div
+class="products"
+id="products">
+</div>
+
+</div>
+
+
+<button
+class="cart-button"
+onclick="openCart()">
+
+🛒 Cart
+<span id="cartCount">0</span>
+
+</button>
+
+
+<div
+class="cart"
+id="cart">
+
+<button
+class="close"
+onclick="closeCart()">
+×
+</button>
+
+<h2>
+Shopping Cart
+</h2>
+
+<div id="cartItems">
+Your cart is empty.
+</div>
+
+<h3>
+Total: ₹<span id="total">0</span>
+</h3>
+
+</div>
+
+
+<!-- ADMIN -->
+
+<div
+class="admin"
+id="admin">
+
+<div class="admin-header">
+
+<strong>
+BANSAL MARKETING ADMIN
+</strong>
+
+<button onclick="closeAdmin()">
+Close
+</button>
+
+</div>
+
+
+<div class="admin-content">
+
+
+<div class="box">
+
+<h2>
+Website Settings
+</h2>
+
+<label>
+Business Name
+</label>
+
+<input
+id="businessName"
+value="BANSAL MARKETING"
+>
+
+<label>
+Tagline
+</label>
+
+<input
+id="businessTagline"
+value="Pure Taste, Every Day."
+>
+
+<button
+class="save"
+onclick="saveSettings()">
+
+Save Settings
+
+</button>
+
+</div>
+
+
+<div class="box">
+
+<h2>
+Add Product
+</h2>
+
+<label>
+Product Name
+</label>
+
+<input
+id="productName"
+placeholder="Turmeric Powder"
+>
+
+<label>
+Category
+</label>
+
+<input
+id="productCategory"
+placeholder="Spices"
+>
+
+<label>
+Price
+</label>
+
+<input
+id="productPrice"
+type="number"
+placeholder="40"
+>
+
+<label>
+Pack Size
+</label>
+
+<input
+id="productWeight"
+placeholder="100g"
+>
+
+<label>
+Image File Name
+</label>
+
+<input
+id="productImage"
+placeholder="haldi.jpg"
+>
+
+<p>
+Put your photo inside the
+<b>images</b> folder.
+</p>
+
+<button
+class="save"
+onclick="addProduct()">
+
+Add Product
+
+</button>
+
+</div>
+
+
+<div class="box">
+
+<h2>
+Products in Catalogue
+</h2>
+
+<div id="adminProducts">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<footer>
+
+<p id="footerName">
+BANSAL MARKETING
+</p>
+
+</footer>
+
+
+<script>
+
+/* DATA */
+
+let settings =
+JSON.parse(
+localStorage.getItem("bansalSettings")
+) || {
+
+name:"BANSAL MARKETING",
+
+tagline:"Pure Taste, Every Day."
+
+};
+
+
+let products =
+JSON.parse(
+localStorage.getItem("bansalProducts")
+) || [
+
+{
+id:1,
+name:"Turmeric Powder",
+category:"Spices",
+price:40,
+weight:"100g",
+image:"images/haldi.jpg"
+}
+
+];
+
+
+let cart=[];
+
+
+/* SETTINGS */
+
+function saveSettings(){
+
+settings.name=
+document.getElementById(
+"businessName"
+).value;
+
+settings.tagline=
+document.getElementById(
+"businessTagline"
+).value;
+
+localStorage.setItem(
+"bansalSettings",
+JSON.stringify(settings)
+);
+
+applySettings();
+
+alert("Settings saved!");
+
+}
+
+
+function applySettings(){
+
+document.getElementById(
+"logo"
+).innerText=settings.name;
+
+document.getElementById(
+"heroName"
+).innerText=settings.name;
+
+document.getElementById(
+"heroTagline"
+).innerText=settings.tagline;
+
+document.getElementById(
+"footerName"
+).innerText=settings.name;
+
+}
+
+
+/* PRODUCTS */
+
+function showProducts(){
+
+let box=
+document.getElementById("products");
+
+if(products.length===0){
+
+box.innerHTML=
+"<p>No products added yet.</p>";
+
+return;
+
+}
+
+
+box.innerHTML="";
+
+
+products.forEach(function(product){
+
+let card=
+document.createElement("div");
+
+card.className="product";
+
+
+let image=
+document.createElement("img");
+
+image.src=product.image;
+
+image.alt=product.name;
+
+image.onerror=function(){
+
+this.src=
+"https://via.placeholder.com/500x400?text=Product";
+
+};
+
+
+let info=
+document.createElement("div");
+
+info.className="info";
+
+
+info.innerHTML=
+
+"<small>"+product.category+"</small>"+
+
+"<h3>"+product.name+"</h3>"+
+
+"<p>"+product.weight+"</p>"+
+
+"<div class='price'>₹"+product.price+"</div>"+
+
+"<button class='add'>Add to Cart</button>";
+
+
+info.querySelector(".add")
+.onclick=function(){
+
+addToCart(product.id);
+
+};
+
+
+card.appendChild(image);
+
+card.appendChild(info);
+
+box.appendChild(card);
+
+});
+
+}
+
+
+/* ADMIN */
+
+function openAdmin(){
+
+document.getElementById(
+"admin"
+).classList.add("open");
+
+showAdminProducts();
+
+}
+
+
+function closeAdmin(){
+
+document.getElementById(
+"admin"
+).classList.remove("open");
+
+}
+
+
+/* ADD PRODUCT */
+
+function addProduct(){
+
+let name=
+document.getElementById(
+"productName"
+).value.trim();
+
+let category=
+document.getElementById(
+"productCategory"
+).value.trim();
+
+let price=
+Number(
+document.getElementById(
+"productPrice"
+).value
+);
+
+let weight=
+document.getElementById(
+"productWeight"
+).value.trim();
+
+let image=
+document.getElementById(
+"productImage"
+).value.trim();
+
+
+if(name===""){
+
+alert("Enter product name.");
+
+return;
+
+}
+
+if(category===""){
+
+alert("Enter category.");
+
+return;
+
+}
+
+if(!price){
+
+alert("Enter price.");
+
+return;
+
+}
+
+if(weight===""){
+
+alert("Enter pack size.");
+
+return;
+
+}
+
+if(image===""){
+
+alert("Enter image file name.");
+
+return;
+
+}
+
+
+/*
+Automatically add images/
+*/
+
+if(!image.startsWith("images/")){
+
+image="images/"+image;
+
+}
+
+
+let newProduct={
+
+id:Date.now(),
+
+name:name,
+
+category:category,
+
+price:price,
+
+weight:weight,
+
+image:image
+
+};
+
+
+products.push(newProduct);
+
+
+localStorage.setItem(
+"bansalProducts",
+JSON.stringify(products)
+);
+
+
+/* Clear form */
+
+document.getElementById(
+"productName"
+).value="";
+
+document.getElementById(
+"productCategory"
+).value="";
+
+document.getElementById(
+"productPrice"
+).value="";
+
+document.getElementById(
+"productWeight"
+).value="";
+
+document.getElementById(
+"productImage"
+).value="";
+
+
+showProducts();
+
+showAdminProducts();
+
+alert("Product added successfully!");
+
+}
+
+
+/* ADMIN PRODUCT LIST */
+
+function showAdminProducts(){
+
+let box=
+document.getElementById(
+"adminProducts"
+);
+
+box.innerHTML="";
+
+
+products.forEach(function(product){
+
+let item=
+document.createElement("div");
+
+item.className=
+"admin-product";
+
+
+item.innerHTML=
+
+"<b>"+product.name+"</b>"+
+
+"<br>₹"+product.price+
+
+"<br>"+product.weight+
+
+"<br>"+
+
+"<button class='delete'>Delete</button>";
+
+
+item.querySelector(
+".delete"
+).onclick=function(){
+
+deleteProduct(product.id);
+
+};
+
+
+box.appendChild(item);
+
+});
+
+}
+
+
+/* DELETE */
+
+function deleteProduct(id){
+
+products=
+products.filter(function(product){
+
+return product.id!==id;
+
+});
+
+
+localStorage.setItem(
+"bansalProducts",
+JSON.stringify(products)
+);
+
+showProducts();
+
+showAdminProducts();
+
+}
+
+
+/* CART */
+
+function addToCart(id){
+
+let product=
+products.find(function(p){
+
+return p.id===id;
+
+});
+
+
+if(!product)return;
+
+
+cart.push(product);
+
+renderCart();
+
+openCart();
+
+}
+
+
+function renderCart(){
+
+let box=
+document.getElementById(
+"cartItems"
+);
+
+if(cart.length===0){
+
+box.innerHTML=
+"Your cart is empty.";
+
+document.getElementById(
+"total"
+).innerText="0";
+
+document.getElementById(
+"cartCount"
+).innerText="0";
+
+return;
+
+}
+
+
+let total=0;
+
+box.innerHTML="";
+
+
+cart.forEach(function(product){
+
+total+=product.price;
+
+
+let item=
+document.createElement("p");
+
+item.innerText=
+product.name+
+" - ₹"+
+product.price;
+
+box.appendChild(item);
+
+});
+
+
+document.getElementById(
+"total"
+).innerText=total;
+
+document.getElementById(
+"cartCount"
+).innerText=cart.length;
+
+}
+
+
+function openCart(){
+
+document.getElementById(
+"cart"
+).classList.add("open");
+
+}
+
+
+function closeCart(){
+
+document.getElementById(
+"cart"
+).classList.remove("open");
+
+}
+
+
+/* START */
+
+document.getElementById(
+"businessName"
+).value=settings.name;
+
+document.getElementById(
+"businessTagline"
+).value=settings.tagline;
+
+applySettings();
+
+showProducts();
+
+</script>
+
+</body>
+</html>
